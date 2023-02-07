@@ -5,6 +5,8 @@ import { store } from './app/store';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import VideoGameSearch from './features/search/VideoGameSearch';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
@@ -12,7 +14,11 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <Router>
+        <Routes>
+          <Route path="/" element={<VideoGameSearch />} />
+        </Routes>
+      </Router>
     </Provider>
   </React.StrictMode>
 );
