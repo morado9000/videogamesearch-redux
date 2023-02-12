@@ -12,12 +12,13 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
 
 export const gamesLoadAsync = createAsyncThunk(
     'gamesearch/getGamesBySearchTerm',
-    async (search) => {
+    async (userData) => {
+        console.log(userData.offset);
         const res = await fetch(
             "http://0.0.0.0:8080/https://api.igdb.com/v4/games", {
               method: "POST", 
               headers:{ 'Client-ID':clientid, 'Authorization':autho }, 
-              body: 'search "' + search + '"; fields *; limit 20;'
+              body: 'search "' + userData.search + '"; fields *; limit 20; offset' + userData.offset + ';'
               }
             )
         const json =  await res.json();
@@ -26,7 +27,7 @@ export const gamesLoadAsync = createAsyncThunk(
             json[i].genres = await genresLoadAsync(json[i]);
             json[i].platforms = await platformsLoadAsync(json[i]);
         }
-        return json;
+        return userData.prevList.concat(json);
     }
 )
 
@@ -34,7 +35,7 @@ export const genresLoadAsync = async (game) => {
         let gen = [];
         if(game.genres){
             for (let i=0; i<game.genres.length; i++) {  
-                delay(1000);        
+                delay(3000);        
                 await fetch(
                   "http://0.0.0.0:8080/https://api.igdb.com/v4/genres", {
                     method: "POST", 
@@ -53,7 +54,7 @@ export const platformsLoadAsync = async (game) => {
         let gen = [];
         if(game.platforms){
             for (let i=0; i<game.platforms.length; i++) {
-                delay(1000);          
+                delay(3000);          
                 await fetch(
                   "http://0.0.0.0:8080/https://api.igdb.com/v4/platforms", {
                     method: "POST", 
