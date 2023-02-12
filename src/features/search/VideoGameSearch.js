@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { gamesLoadAsync, selectGame, selectStatus } from './videoGameSlice';
+import { gamesLoadAsync, selectGame, selectStatus, resetGames } from './videoGameSlice';
 
+const clientid = '';
+const autho = '';
+
+const delay = ms => new Promise(res => setTimeout(res, ms));
 
 
 export default function VideoGameSearch() {
@@ -10,7 +14,7 @@ export default function VideoGameSearch() {
     const status = useSelector(selectStatus);
     const games = useSelector(selectGame);
 
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm, setSearchTerm] = useState("Mario");
     const [offset, setOffset] = useState("1");
 
     const dispatch = useDispatch();
@@ -19,22 +23,39 @@ export default function VideoGameSearch() {
         setSearchTerm(e.target.value);
     }
 
+    let gamesLoad = async (offset) => {
+            const res = await fetch(
+                "http://0.0.0.0:8080/https://api.igdb.com/v4/games", {
+                  method: "POST", 
+                  headers:{ 'Client-ID':clientid, 'Authorization':autho }, 
+                  body: 'search "' + searchTerm + '"; fields *; offset ' + offset + '; limit 20;'
+                  }
+                )
+            const json =  await res.json();
+            for(let i=0; i<json.length; i++){
+                await delay(1500)
+                .then(dispatch(gamesLoadAsync({game: json[i]})))
+            }
+    }
+
     function loadGames(e) {
         e.preventDefault();
-        dispatch(gamesLoadAsync({search: searchTerm, prevList: [], offset: offset}));
+        dispatch(resetGames());
+        gamesLoad();
     }
 
     function loadMore() {
         const off = (Number(offset) + 20);
         setOffset(off.toString());
-        console.log(offset);
-        dispatch(gamesLoadAsync({search: searchTerm, prevList: games, offset: off}))
+        console.log(off);
+        gamesLoad(off);
     }
 
     useEffect(() => {
-        dispatch(gamesLoadAsync({search: "Mario", prevList: [], offset: offset})); 
+        gamesLoad("1"); 
          
-       }, [])
+    }, [])
+
 
     return (
         <>
@@ -59,7 +80,7 @@ export default function VideoGameSearch() {
                         <p className="text-1xl self-start font-bold underline">Platforms</p>
                         <p className="text-1xl self-start font-bold underline">Rating</p>
                      </div>
-            {status == "fulfilled" ? (
+           {/* {status == "fulfilled" ? (*/}
                 
                     <>
                         {games.map(game => 
@@ -72,9 +93,9 @@ export default function VideoGameSearch() {
                         )}
                     </>
                
-            ) : (
+            {/*) : (
                 "Loading"
-            )}
+            )}*/}
              </div>
         </>
     )
