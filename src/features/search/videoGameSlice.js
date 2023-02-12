@@ -13,12 +13,11 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
 export const gamesLoadAsync = createAsyncThunk(
     'gamesearch/getGamesBySearchTerm',
     async (userData) => {
-        console.log(userData.offset);
         const res = await fetch(
             "http://0.0.0.0:8080/https://api.igdb.com/v4/games", {
               method: "POST", 
               headers:{ 'Client-ID':clientid, 'Authorization':autho }, 
-              body: 'search "' + userData.search + '"; fields *; limit 20; offset' + userData.offset + ';'
+              body: 'search "' + userData.search + '"; fields *; offset ' + userData.offset + '; limit 20;'
               }
             )
         const json =  await res.json();

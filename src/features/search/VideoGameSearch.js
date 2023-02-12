@@ -20,21 +20,21 @@ export default function VideoGameSearch() {
     }
 
     function loadGames(e) {
+        e.preventDefault();
         dispatch(gamesLoadAsync({search: searchTerm, prevList: [], offset: offset}));
     }
 
     function loadMore() {
         const off = (Number(offset) + 20);
-        setOffset(toString(off));
+        setOffset(off.toString());
         console.log(offset);
-        dispatch(gamesLoadAsync({search: searchTerm, prevList: games, offset}))
+        dispatch(gamesLoadAsync({search: searchTerm, prevList: games, offset: off}))
     }
 
     useEffect(() => {
         dispatch(gamesLoadAsync({search: "Mario", prevList: [], offset: offset})); 
          
        }, [])
-
 
     return (
         <>
