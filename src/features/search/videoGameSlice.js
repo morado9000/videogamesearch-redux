@@ -5,8 +5,8 @@ const initialState = {
     status: 'loading'
 }
 
-
-const delay = ms => new Promise(res => setTimeout(res, ms));
+const clientid = '';
+const autho = '';
 
 export const gamesLoadAsync = createAsyncThunk(
     'gamesearch/getGamesBySearchTerm',
