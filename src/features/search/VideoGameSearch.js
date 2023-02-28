@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { gamesLoadAsync, selectGame, selectStatus, resetGames } from './videoGameSlice';
+import { quickSortProducts } from '../../utils';
 
 const clientid = '';
 const autho = '';
@@ -17,6 +18,7 @@ export default function VideoGameSearch() {
     const [searchTerm, setSearchTerm] = useState("Mario");
     const [offset, setOffset] = useState(1);
     const [myStatus, setMyStatus] = useState("idle");
+    const [isOpen, setIsOpen] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -31,7 +33,7 @@ export default function VideoGameSearch() {
                 "http://0.0.0.0:8080/https://api.igdb.com/v4/games", {
                   method: "POST", 
                   headers:{ 'Client-ID':clientid, 'Authorization':autho }, 
-                  body: 'search "' + searchTerm + '"; fields *; offset ' + offset + '; limit 20;',
+                  body: 'sort created_at desc; where name ~*"' + searchTerm + '"* & rating > 0; fields *; offset ' + offset + '; limit 20;',
                   }
                 )
             const json =  await res.json();
@@ -53,6 +55,14 @@ export default function VideoGameSearch() {
         setOffset(off);
     }
 
+    function open(){
+        setIsOpen(true);
+    }
+
+    function close(){
+        setIsOpen(false);
+    }
+    
     useEffect(() => {
         if(offset != 1){
             gamesLoad();
