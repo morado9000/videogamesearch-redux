@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { gamesLoadAsync, selectGame, selectStatus, resetGames } from './videoGameSlice';
-import { quickSortProducts } from '../../utils';
 
-const clientid = '';
-const autho = '';
 
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
@@ -30,9 +27,8 @@ export default function VideoGameSearch() {
     let gamesLoad = async () => {
             setMyStatus("Loading")
             const res = await fetch(
-                "http://0.0.0.0:8080/https://api.igdb.com/v4/games", {
+                "/igdb/games", {
                   method: "POST", 
-                  headers:{ 'Client-ID':clientid, 'Authorization':autho }, 
                   body: 'sort created_at desc; where name ~*"' + searchTerm + '"* & rating > 0; fields *; offset ' + offset + '; limit 20;',
                   }
                 )

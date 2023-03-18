@@ -5,9 +5,6 @@ const initialState = {
     status: 'loading'
 }
 
-const clientid = '';
-const autho = '';
-
 export const gamesLoadAsync = createAsyncThunk(
     'gamesearch/getGamesBySearchTerm',
     async (userData) => {
@@ -24,9 +21,8 @@ export const genresLoadAsync = async (game) => {
         if(game.genres){
             for (let i=0; i<game.genres.length; i++) {  
                 await fetch(
-                  "http://0.0.0.0:8080/https://api.igdb.com/v4/genres", {
+                  "/igdb/genres", {
                     method: "POST", 
-                    headers:{ 'Client-ID':clientid, 'Authorization':autho }, 
                     body: 'fields name; where id = ' + game.genres[i] + ';'
                   }
                 )
@@ -42,9 +38,8 @@ export const platformsLoadAsync = async (game) => {
         if(game.platforms){
             for (let i=0; i<game.platforms.length; i++) {
                 await fetch(
-                  "http://0.0.0.0:8080/https://api.igdb.com/v4/platforms", {
+                  "/igdb/platforms", {
                     method: "POST", 
-                    headers:{ 'Client-ID':clientid, 'Authorization':autho }, 
                     body: 'fields name; where id = ' + game.platforms[i] + ';'
                   }
                 )
@@ -72,7 +67,6 @@ export const videoGameSlice = createSlice({
                 state.status = 'loading';
             })
             .addCase(gamesLoadAsync.fulfilled, (state, action) => {
-                console.log(action.payload);
                 state.games.push(action.payload);
                 state.status = 'fulfilled';
             })
