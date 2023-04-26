@@ -1,0 +1,24 @@
+services:
+  api:
+    image: morado9000/videogamesearch-api
+    build: 
+      context: api
+      args:
+        CLIENT_ID: ${CLIENT_ID}
+        AUTHO: ${AUTHO}
+    ports:
+      - 3030:3030
+    networks:
+      - videogamesearch-react 
+  frontend:
+    image: morado9000/videogamesearch-frontend
+    build:
+      context: frontend
+    ports:
+      - 80:80
+    depends_on:
+      - api
+    networks:
+      - videogamesearch-react
+networks:
+  videogamesearch-react:
