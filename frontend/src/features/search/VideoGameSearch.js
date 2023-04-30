@@ -12,7 +12,7 @@ export default function VideoGameSearch() {
     const status = useSelector(selectStatus);
     const games = useSelector(selectGame);
 
-    const [searchTerm, setSearchTerm] = useState("Mario");
+    const [searchTerm, setSearchTerm] = useState("");
     const [offset, setOffset] = useState(1);
     const [myStatus, setMyStatus] = useState("idle");
     const [isOpen, setIsOpen] = useState(false);
@@ -66,7 +66,8 @@ export default function VideoGameSearch() {
     }, [offset])
 
     useEffect(() => {
-        loadGames();
+        if(searchTerm != "")
+            loadGames();
     }, [searchTerm])
 
     return (
@@ -76,8 +77,9 @@ export default function VideoGameSearch() {
                         <div className="flex flex-col items-center py-6 justify-center">
                             <h2 className="text-4xl">Video Game Search</h2>
                         </div>
-                        <div className='flex flex-col items-center py-6 justify-center md:flex-row'>
+                        
                             <form onSubmit={onSearchChange}>
+                                <div className='flex flex-col space-y-6 items-center mx-auto py-6 justify-center md:flex-row md:space-y-0'>
                                 <label>Search: </label>
                                 {myStatus == "idle" ? (
                                     <>
@@ -92,13 +94,13 @@ export default function VideoGameSearch() {
                                         <button disabled type="button" className='p-3 border border-black' onClick={loadMore}>Load more</button>
                                     </>
                                 )}
-                                
+                                </div>
                             </form>
                             
-                        </div>
+                        
 
                      </div>
-                     <div className="flex grid grid-cols-4 gap-x-3 items-stretch mt-10">
+                     <div className="flex grid grid-cols-4 gap-x-3 items-stretch mt-10 hidden md:grid">
                         <p className="text-1xl self-start font-bold underline">Name</p>
                         <p className="text-1xl self-start font-bold underline">Genre</p>
                         <p className="text-1xl self-start font-bold underline">Platforms</p>
@@ -108,11 +110,23 @@ export default function VideoGameSearch() {
                 
                     <>
                         {games.map(game => 
-                            <div className="flex grid grid-cols-4 gap-x-3 items-stretch mt-10">
-                                <p className="text-1xl self-start">{game.name}</p>
-                                <p className="text-1xl self-start">{game.genres[0]}</p>
-                                <p className="text-1xl self-start">{game.platforms[0]}</p>
-                                <p className="text-1xl self-start">{game.rating}</p>
+                            <div className="flex flex-col grid-cols-4 gap-x-3 items-stretch mt-10 md:grid">
+                                <div className='flex flex-row'>
+                                    <p className="text-1xl self-start font-bold underline md:hidden">Name: </p>
+                                    <p className="text-1xl self-start">{game.name}</p>
+                                </div>
+                                <div className='flex flex-row'>
+                                    <p className="text-1xl self-start font-bold underline md:hidden"> Genre: </p>
+                                    <p className="text-1xl self-start">{game.genres[0]}</p>
+                                </div>
+                                <div className='flex flex-row'>
+                                    <p className="text-1xl self-start font-bold underline md:hidden">Platforms: </p>
+                                    <p className="text-1xl self-start">{game.platforms[0]}</p>
+                                </div>
+                                <div className='flex flex-row pace-x-5'>
+                                    <p className="text-1xl self-start font-bold underline md:hidden">Ratings: </p>
+                                    <p className="text-1xl self-start">{parseInt(game.rating)}</p>
+                                </div>
                             </div>    
                         )}
                     </>

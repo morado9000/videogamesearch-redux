@@ -5,22 +5,6 @@ import { gamesLoadAsync, selectGame, selectStatus } from './features/search/vide
 
 function App() {
 
-  const status = useSelector(selectStatus);
-  const game = useSelector(selectGame);
-
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-   dispatch(gamesLoadAsync("Mario")); 
-    
-  }, [])
-
-  useEffect(() => {
-    if(status == "pending")
-      console.log("list: " + game);
-  }, [status])
-
   return (
     <div className="App">
       
